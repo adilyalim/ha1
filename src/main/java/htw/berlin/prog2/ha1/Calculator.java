@@ -45,10 +45,37 @@ public class Calculator {
      * im Ursprungszustand ist.
      */
     public void pressClearKey() {
-        screen = "0";
-        latestOperation = "";
-        latestValue = 0.0;
+
+        if(!pressedOnce){
+            screen = "0";
+            pressedOnce = true;
+
+        } else {
+            screen = "0";
+            latestOperation = "";
+            latestValue = 0.0;
+            pressedOnce = false;
+        }
     }
+    private boolean pressedOnce = false;
+
+
+    /**
+     * Dieser methode soll den Wert von latesValue zurückgeben.
+     * @return Wert für latestValue
+     */
+    public double getLatestValue(){
+        return latestValue;
+    }
+
+    /**
+     * Dieser Methode soll die letzte angewandte Operation zurückgeben.
+     * @return zeichen von letzte Operation
+     */
+    public String getLatestOperation(){
+        return latestOperation;
+    }
+
 
     /**
      * Empfängt den Wert einer gedrückten binären Operationstaste, also eine der vier Operationen
@@ -105,6 +132,11 @@ public class Calculator {
      * entfernt und der Inhalt fortan als positiv interpretiert.
      */
     public void pressNegativeKey() {
+
+        if (screen.equals("0")) {
+            return;
+        }
+
         screen = screen.startsWith("-") ? screen.substring(1) : "-" + screen;
     }
 
@@ -126,6 +158,7 @@ public class Calculator {
             default -> throw new IllegalArgumentException();
         };
         screen = Double.toString(result);
+        latestValue = result;
         if(screen.equals("Infinity")) screen = "Error";
         if(screen.endsWith(".0")) screen = screen.substring(0,screen.length()-2);
         if(screen.contains(".") && screen.length() > 11) screen = screen.substring(0, 10);
